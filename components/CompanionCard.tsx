@@ -11,58 +11,75 @@ interface CompanionCardProps {
 }
 
 const CompanionCard = ({
-                           id,
-                           name,
-                           topic,
-                           subject,
-                           duration,
-                           color,
-                       }: CompanionCardProps) => {
+    id,
+    name,
+    topic,
+    subject,
+    duration,
+    color,
+}: CompanionCardProps) => {
     return (
         <article
-            className="companion-card rounded-lg p-4 text-white shadow-md flex flex-col gap-4"
-            style={{ backgroundColor: color }}
+            className="companion-card group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 flex flex-col justify-between gap-6 w-full transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:bg-white/10"
         >
+            {/* Ambient Background Glow */}
+            <div
+                className="absolute -top-24 -right-24 w-64 h-64 rounded-full blur-3xl opacity-10 transition-opacity group-hover:opacity-20 pointer-events-none"
+                style={{ backgroundColor: color }}
+            />
+
+            {/* Decorative Overlay for texture */}
+            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] pointer-events-none mix-blend-overlay"></div>
+
             {/* Header */}
-            <div className="flex justify-between items-center">
-        <span className="subject-badge bg-white/20 px-2 py-1 rounded text-sm font-medium uppercase">
-          {subject}
-        </span>
-                <button className="companion-bookmark hover:opacity-80 transition">
+            <div className="relative z-10 flex justify-between items-start">
+                <span className="subject-badge bg-white/5 border-white/10 backdrop-blur-md text-foreground/80">
+                    {subject}
+                </span>
+                <button className="companion-bookmark">
                     <Image
                         src="/icons/bookmark.svg"
-                        alt="Bookmark icon"
-                        width={12.5}
-                        height={15}
+                        alt="Bookmark"
+                        width={14}
+                        height={16}
+                        className="opacity-50 hover:opacity-100 transition-opacity invert dark:invert-0"
                     />
                 </button>
             </div>
 
-            {/* Title & Topic */}
-            <div className="flex flex-col gap-1">
-                <h2 className="text-2xl font-bold">{name}</h2>
-                <p className="text-sm text-white/90">{topic}</p>
-            </div>
+            {/* Content */}
+            <div className="relative z-10 flex flex-col gap-3 mt-4 flex-grow">
+                <h2 className="text-2xl font-bold leading-tight tracking-tight text-foreground group-hover:text-primary transition-colors">{name}</h2>
+                <p className="text-sm font-medium text-muted-foreground line-clamp-2">{topic}</p>
 
-            {/* Duration */}
-            <div className="flex items-center gap-2 text-sm text-white/90">
-                <Image
-                    src="/icons/clock.svg"
-                    alt="Clock icon"
-                    width={13.5}
-                    height={13.5}
-                />
-                <span>{duration} minutes</span>
-            </div>
-
-            {/* Action Button */}
-            <Link href={`/companions/${id}`} className="w-full">
-                <div className="btn-primary w-full text-center py-2 rounded bg-white text-black font-semibold hover:bg-gray-200 transition">
-                    Launch Lesson
+                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground/80 mt-auto pt-4">
+                    <Image
+                        src="/icons/clock.svg"
+                        alt="Time"
+                        width={16}
+                        height={16}
+                        className="opacity-60 invert dark:invert-0"
+                    />
+                    <span>{duration} min session</span>
                 </div>
-            </Link>
+            </div>
+
+            {/* Action */}
+            <div className="relative z-10 pt-4 mt-auto">
+                <Link href={`/companions/${id}`} className="block w-full">
+                    <div
+                        className="w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 group-hover:scale-[1.02] shadow-lg"
+                        style={{
+                            backgroundColor: color,
+                            color: '#ffffff', // Ensure text is legible on color
+                            boxShadow: `0 8px 20px -8px ${color}80`
+                        }}
+                    >
+                        Launch Lesson
+                    </div>
+                </Link>
+            </div>
         </article>
     );
 };
-
 export default CompanionCard;

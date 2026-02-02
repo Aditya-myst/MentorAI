@@ -10,12 +10,21 @@ export default async function Page() {
     const companions = await getAllCompanions({ limit: 3 });
     const recentSessionsCompanions = await getRecentSessions({ limit: 10 });
 
+    const uniqueCompanions = companions.filter((companion, index, self) =>
+        index === self.findIndex((c) => (
+            c.id === companion.id || (c.name === companion.name && c.subject === companion.subject)
+        ))
+    );
     return (
-        <main className="space-y-12 px-6 py-10">
-            <section>
-                <h1 className="text-3xl font-bold mb-6 underline">Popular Companions</h1>
-                <div className="home-section flex flex-wrap gap-6">
-                    {companions.map((companion) => (
+        <main className="space-y-16 px-6 py-10 max-w-[1400px] mx-auto">
+            <section className="space-y-8">
+                <div className="space-y-2">
+                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Popular Companions</h1>
+                    <p className="text-muted-foreground text-lg">Choose a companion and start your learning journey.</p>
+                </div>
+
+                <div className="companions-grid">
+                    {uniqueCompanions.map((companion) => (
                         <CompanionCard
                             key={companion.id}
                             {...companion}
@@ -25,13 +34,16 @@ export default async function Page() {
                 </div>
             </section>
 
-            <section className="home-section flex flex-col lg:flex-row gap-8">
-                <CompanionList
-                    title="Recently completed sessions"
-                    companions={recentSessionsCompanions}
-                    classNames="w-full lg:w-2/3"
-                />
-                <CTA />
+            <section className="flex flex-col xl:flex-row gap-8 items-start">
+                <div className="w-full xl:w-2/3">
+                    <CompanionList
+                        title="Recently completed sessions"
+                        companions={recentSessionsCompanions}
+                    />
+                </div>
+                <div className="w-full xl:w-1/3 sticky top-24">
+                    <CTA />
+                </div>
             </section>
         </main>
     );

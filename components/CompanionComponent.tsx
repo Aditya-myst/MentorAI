@@ -1,12 +1,12 @@
 'use client';
 
-import {useEffect, useRef, useState} from 'react'
-import {cn, configureAssistant, getSubjectColor} from "@/lib/utils";
-import {vapi} from "@/lib/vapi.sdk";
+import { useEffect, useRef, useState } from 'react'
+import { cn, configureAssistant, getSubjectColor } from "@/lib/utils";
+import { vapi } from "@/lib/vapi.sdk";
 import Image from "next/image";
-import Lottie, {LottieRefCurrentProps} from "lottie-react";
+import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import soundwaves from '@/constants/soundwaves.json'
-import {addToSessionHistory} from "@/lib/actions/companion.actions";
+import { addToSessionHistory } from "@/lib/actions/companion.actions";
 
 enum CallStatus {
     INACTIVE = 'INACTIVE',
@@ -24,8 +24,8 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
     const lottieRef = useRef<LottieRefCurrentProps>(null);
 
     useEffect(() => {
-        if(lottieRef) {
-            if(isSpeaking) {
+        if (lottieRef) {
+            if (isSpeaking) {
                 lottieRef.current?.play()
             } else {
                 lottieRef.current?.stop()
@@ -42,8 +42,8 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
         }
 
         const onMessage = (message: Message) => {
-            if(message.type === 'transcript' && message.transcriptType === 'final') {
-                const newMessage= { role: message.role, content: message.transcript}
+            if (message.type === 'transcript' && message.transcriptType === 'final') {
+                const newMessage = { role: message.role, content: message.transcript }
                 setMessages((prev) => [newMessage, ...prev])
             }
         }
@@ -95,65 +95,88 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
     }
 
     return (
-        <section className="flex flex-col h-[70vh]">
-            <section className="flex gap-8 max-sm:flex-col">
-                <div className="companion-section">
-                    <div className="companion-avatar" style={{ backgroundColor: getSubjectColor(subject)}}>
-                        <div
-                            className={
-                                cn(
-                                    'absolute transition-opacity duration-1000', callStatus === CallStatus.FINISHED || callStatus === CallStatus.INACTIVE ? 'opacity-1001' : 'opacity-0', callStatus === CallStatus.CONNECTING && 'opacity-100 animate-pulse'
-                                )
-                            }>
-                            <Image src={`/icons/${subject}.svg`} alt={subject} width={150} height={150} className="max-sm:w-fit" />
-                        </div>
+        <section className="flex flex-col h-[70vh] gap-6">
+            <section className="flex gap-8 max-lg:flex-col flex-1 min-h-0">
+                <div className="glass-panel rounded-3xl p-8 flex-1 flex flex-col items-center justify-center gap-6 relative overflow-hidden transition-all duration-500">
+                    <div className="relative z-10 flex flex-col items-center gap-6 w-full">
+                        <div className="relative size-48 md:size-64 flex items-center justify-center rounded-3xl shadow-2xl transition-all duration-500" style={{ backgroundColor: getSubjectColor(subject) }}>
+                            <div
+                                className={
+                                    cn(
+                                        'absolute transition-opacity duration-1000 inset-0 flex items-center justify-center',
+                                        callStatus === CallStatus.FINISHED || callStatus === CallStatus.INACTIVE ? 'opacity-100' : 'opacity-0',
+                                        callStatus === CallStatus.CONNECTING && 'opacity-100 animate-pulse'
+                                    )
+                                }>
+                                <Image src={`/icons/${subject}.svg`} alt={subject} width={100} height={100} className="drop-shadow-lg" />
+                            </div>
 
-                        <div className={cn('absolute transition-opacity duration-1000', callStatus === CallStatus.ACTIVE ? 'opacity-100': 'opacity-0')}>
-                            <Lottie
-                                lottieRef={lottieRef}
-                                animationData={soundwaves}
-                                autoplay={false}
-                                className="companion-lottie"
-                            />
+                            <div className={cn('absolute inset-0 flex items-center justify-center transition-opacity duration-1000', callStatus === CallStatus.ACTIVE ? 'opacity-100' : 'opacity-0')}>
+                                <Lottie
+                                    lottieRef={lottieRef}
+                                    animationData={soundwaves}
+                                    autoplay={false}
+                                    className="w-full h-full p-4"
+                                />
+                            </div>
                         </div>
+                        <p className="font-bold text-3xl tracking-tight text-center">{name}</p>
                     </div>
-                    <p className="font-bold text-2xl">{name}</p>
                 </div>
 
-                <div className="user-section">
-                    <div className="user-avatar">
-                        <Image src={userImage} alt={userName} width={130} height={130} className="rounded-lg" />
-                        <p className="font-bold text-2xl">
+                <div className="glass-panel rounded-3xl p-8 w-full lg:w-[400px] flex flex-col gap-6 justify-center">
+                    <div className="flex flex-col items-center gap-4 py-4">
+                        <div className="relative size-32 rounded-full overflow-hidden border-4 border-white/10 shadow-xl">
+                            <Image src={userImage} alt={userName} fill className="object-cover" />
+                        </div>
+                        <p className="font-bold text-2xl text-center">
                             {userName}
                         </p>
                     </div>
-                    <button className="btn-mic" onClick={toggleMicrophone} disabled={callStatus !== CallStatus.ACTIVE}>
-                        <Image src={isMuted ? '/icons/mic-off.svg' : '/icons/mic-on.svg'} alt="mic" width={36} height={36} />
-                        <p className="max-sm:hidden">
-                            {isMuted ? 'Turn on microphone' : 'Turn off microphone'}
-                        </p>
-                    </button>
-                    <button className={cn('rounded-lg py-2 cursor-pointer transition-colors w-full text-white', callStatus ===CallStatus.ACTIVE ? 'bg-red-700' : 'bg-primary', callStatus === CallStatus.CONNECTING && 'animate-pulse')} onClick={callStatus === CallStatus.ACTIVE ? handleDisconnect : handleCall}>
-                        {callStatus === CallStatus.ACTIVE
-                            ? "End Session"
-                            : callStatus === CallStatus.CONNECTING
-                                ? 'Connecting'
-                                : 'Start Session'
-                        }
-                    </button>
+
+                    <div className="space-y-3 w-full mt-auto">
+                        <button
+                            className="flex items-center justify-center gap-3 w-full p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+                            onClick={toggleMicrophone}
+                            disabled={callStatus !== CallStatus.ACTIVE}
+                        >
+                            <Image src={isMuted ? '/icons/mic-off.svg' : '/icons/mic-on.svg'} alt="mic" width={24} height={24} className="invert dark:invert-0" />
+                            <span className="font-semibold text-lg max-sm:hidden">
+                                {isMuted ? 'Turn on microphone' : 'Turn off microphone'}
+                            </span>
+                        </button>
+
+                        <button
+                            className={cn(
+                                'w-full p-4 rounded-xl font-bold text-lg text-white shadow-lg transition-all transform active:scale-95',
+                                callStatus === CallStatus.ACTIVE
+                                    ? 'bg-red-500 hover:bg-red-600 shadow-red-500/20'
+                                    : 'bg-primary hover:bg-primary/90 shadow-primary/20',
+                                callStatus === CallStatus.CONNECTING && 'animate-pulse cursor-wait'
+                            )}
+                            onClick={callStatus === CallStatus.ACTIVE ? handleDisconnect : handleCall}
+                        >
+                            {callStatus === CallStatus.ACTIVE
+                                ? "End Session"
+                                : callStatus === CallStatus.CONNECTING
+                                    ? 'Connecting...'
+                                    : 'Start Session'
+                            }
+                        </button>
+                    </div>
                 </div>
             </section>
 
             <section className="transcript">
                 <div className="transcript-message no-scrollbar">
                     {messages.map((message, index) => {
-                        if(message.role === 'assistant') {
+                        if (message.role === 'assistant') {
                             return (
                                 <p key={index} className="max-sm:text-sm">
                                     {
                                         name
                                             .split(' ')[0]
-                                            .replace('/[.,]/g, ','')
+                                            .replace(/[.,]/g, '')
                                     }: {message.content}
                                 </p>
                             )

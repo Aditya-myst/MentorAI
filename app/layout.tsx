@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import {
   ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
 } from "@clerk/nextjs";
 
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+const outfit = Outfit({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
@@ -27,15 +22,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-
-      <html lang="en">
-        <body className={`${bricolage.variable} antialiased`}>
-        <ClerkProvider appearance={{variables:{colorPrimary :'#fe5933' }} }>
-         <Navbar/>
-          {children}
-        </ClerkProvider>
+    <ClerkProvider appearance={{ variables: { colorPrimary: '#8b5cf6' } }}>
+      <html lang="en" className="dark">
+        <body className={`${outfit.variable} antialiased bg-background text-foreground min-h-screen selection:bg-primary selection:text-primary-foreground`}>
+          <Navbar />
+          <div className="pt-24 pb-10">
+            {children}
+          </div>
         </body>
       </html>
-
+    </ClerkProvider>
   );
 }

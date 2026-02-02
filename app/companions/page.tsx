@@ -5,23 +5,28 @@ import SubjectFilter from "@/components/SubjectFilter";
 import SearchInput from "@/components/Searchinginput";
 
 interface SearchParams {
-    searchParams: {
-        subject?: string;
-        topic?: string;
-    };
+    searchParams: Promise<{ subject?: string; topic?: string }>;
 }
 
 const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
-    const subject = searchParams.subject || '';
-    const topic = searchParams.topic || '';
+    const params = await searchParams;
+    const subject = params.subject || '';
+    const topic = params.topic || '';
 
     const companions = await getAllCompanions({ subject, topic });
+
+    // Deduplicate companions by ID and Name to prevent duplicate cards
+    const uniqueCompanions = companions.filter((companion, index, self) =>
+        index === self.findIndex((c) => (
+            c.id === companion.id || (c.name === companion.name && c.subject === companion.subject)
+        ))
+    );
 
     return (
         <main className="px-6 py-8 space-y-6">
             {/* Header & Filters */}
             <section className="flex flex-wrap justify-between gap-4 items-center">
-                <h1 className="text-3xl font-bold text-gray-900">Companion Library</h1>
+                <h1 className="text-3xl font-bold text-foreground">Companion Library</h1>
                 <div className="flex gap-3 flex-wrap">
                     <SearchInput />
                     <SubjectFilter />
@@ -30,8 +35,8 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
 
             {/* Companions Grid */}
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {companions.length > 0 ? (
-                    companions.map((companion) => (
+                {uniqueCompanions.length > 0 ? (
+                    uniqueCompanions.map((companion) => (
                         <CompanionCard
                             key={companion.id}
                             {...companion}

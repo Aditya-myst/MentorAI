@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
+import { Search } from "lucide-react";
 import { formUrlQuery, removeKeysFromUrlQuery } from "@jsmastery/utils";
 
 const SearchInput = () => {
@@ -36,16 +36,13 @@ const SearchInput = () => {
     }, [searchQuery, router, searchParams, pathname]);
 
     return (
-        <div className="relative border border-black rounded-lg items-center flex gap-2 px-2 h-fit">
-            <Image
-                src="/icons/search.svg"
-                alt="search"
-                width={15}
-                height={15}
+        <div className="relative border border-white/10 bg-white/5 rounded-full items-center flex gap-3 px-4 py-2 h-fit transition-all hover:border-white/20 hover:bg-white/10 group">
+            <Search
+                className="w-4 h-4 text-muted-foreground transition-colors group-hover:text-foreground"
             />
             <input
                 placeholder="Search Companions..."
-                className="outline-none"
+                className="outline-none bg-transparent text-sm w-[200px] placeholder:text-muted-foreground text-foreground transition-all focus:w-[240px]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
