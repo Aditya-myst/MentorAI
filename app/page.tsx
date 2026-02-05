@@ -16,11 +16,11 @@ export default async function Page() {
         ))
     );
     return (
-        <main className="space-y-16 px-6 py-10 max-w-[1400px] mx-auto">
-            <section className="space-y-8">
+        <main className="space-y-8 md:space-y-16 px-4 md:px-6 py-6 md:py-10 max-w-[1400px] mx-auto">
+            <section className="space-y-6 md:space-y-8">
                 <div className="space-y-2">
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Popular Companions</h1>
-                    <p className="text-muted-foreground text-lg">Choose a companion and start your learning journey.</p>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">Popular Companions</h1>
+                    <p className="text-muted-foreground text-base md:text-lg">Choose a companion and start your learning journey.</p>
                 </div>
 
                 <div className="companions-grid">
@@ -41,10 +41,11 @@ export default async function Page() {
                         companions={recentSessionsCompanions}
                     />
                 </div>
-                <div className="w-full xl:w-1/3 sticky top-24">
+                <div className="w-full xl:w-1/3 xl:sticky xl:top-24">
                     <CTA />
                 </div>
             </section>
         </main>
+
     );
 }

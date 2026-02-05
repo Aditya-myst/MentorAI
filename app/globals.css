@@ -142,7 +142,7 @@ body {
 
   /* Updated Component Styles */
   .home-section {
-    @apply flex gap-6 justify-between items-start w-full max-lg:flex-col max-lg:items-center;
+    @apply flex gap-4 md:gap-6 justify-between items-start w-full max-lg:flex-col max-lg:items-center;
   }
 
   .companions-grid {
@@ -173,17 +173,17 @@ body {
 
   /* Navbar */
   .navbar {
-    @apply fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1400px] backdrop-blur-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] shadow-lg rounded-full px-6 py-2 flex items-center justify-between transition-all duration-300;
+    @apply fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-[1400px] backdrop-blur-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] shadow-lg rounded-3xl md:rounded-full px-4 md:px-6 py-2 flex items-center justify-between transition-all duration-300;
   }
 
   /* Lists */
   .companion-list {
-    @apply backdrop-blur-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] shadow-lg rounded-3xl p-8 w-full;
+    @apply backdrop-blur-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] shadow-lg rounded-3xl p-4 md:p-8 w-full;
   }
 
   /* CTA */
   .cta-section {
-    @apply relative overflow-hidden bg-cta text-cta-foreground rounded-3xl p-10 flex flex-col items-center text-center gap-6 w-full shadow-2xl;
+    @apply relative overflow-hidden bg-cta text-cta-foreground rounded-3xl p-6 md:p-10 flex flex-col items-center text-center gap-6 w-full shadow-2xl;
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
