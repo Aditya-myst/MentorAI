@@ -68,7 +68,7 @@ const Navbar = () => {
 
             {/* Mobile Menu Overlay */}
             {isMenuOpen && (
-                <div className="absolute top-full left-0 right-0 mt-4 mx-4 p-6 glass-panel rounded-3xl flex flex-col gap-6 md:hidden animate-in fade-in slide-in-from-top-4 duration-300">
+                <div className="absolute top-full left-0 right-0 mt-4 mx-4 p-6 glass-menu rounded-3xl flex flex-col gap-6 md:hidden animate-in fade-in slide-in-from-top-4 duration-300">
                     <NavItems className="flex-col items-start gap-4" onClose={() => setIsMenuOpen(false)} />
                     <SignedOut>
                         <SignInButton >
